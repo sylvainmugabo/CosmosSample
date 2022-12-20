@@ -15,6 +15,7 @@ var builder = new ServiceCollection().AddSingleton<ICosmosDbService>(await InitA
 var app = builder.BuildServiceProvider();
 var dbService = app.GetRequiredService<ICosmosDbService>();
 
+//1) Add product 
 Product newItem = new(
     id: Guid.NewGuid().ToString(),
     categoryId: Guid.NewGuid().ToString(),
@@ -25,6 +26,8 @@ Product newItem = new(
 );
 
 await dbService.Addsync(newItem);
+
+//2) query database for all product 
 var products = await dbService.GetMultipleAsync("SELECT * FROM p");
 foreach (var product in products)
 {
