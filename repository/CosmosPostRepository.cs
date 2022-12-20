@@ -1,13 +1,13 @@
 using CosmosSample.Model;
 using Microsoft.Azure.Cosmos;
 
-namespace CosmosSample
+namespace CosmosSample.Repository
 {
-    public class CosmosPostService : ICosmosDbService
+    public class CosmosPostRepository : ICosmosDbRepository
     {
         private Container _container;
 
-        public CosmosPostService(CosmosClient cosmosClient, string? databaseName, string? containerName)
+        public CosmosPostRepository(CosmosClient cosmosClient, string? databaseName, string? containerName)
         {
 
             _container = cosmosClient.GetContainer(databaseName, containerName);

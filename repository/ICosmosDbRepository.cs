@@ -1,8 +1,8 @@
 using CosmosSample.Model;
 
-namespace CosmosSample
+namespace CosmosSample.Repository
 {
-    public interface ICosmosDbService
+    public interface ICosmosDbRepository
     {
         Task<IEnumerable<Product>> GetMultipleAsync(string query);
         Task<Product?> GetProductAsync(string id);

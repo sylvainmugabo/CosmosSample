@@ -1,5 +1,5 @@
-﻿using CosmosSample;
-using CosmosSample.Model;
+﻿using CosmosSample.Model;
+using CosmosSample.Repository;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,9 +11,9 @@ var config = new ConfigurationBuilder()
         .AddEnvironmentVariables()
         .AddAzureKeyVault(vaultName)
         .Build();
-var builder = new ServiceCollection().AddSingleton<ICosmosDbService>(await InitAsync(config));
+var builder = new ServiceCollection().AddSingleton<ICosmosDbRepository>(await InitAsync(config));
 var app = builder.BuildServiceProvider();
-var dbService = app.GetRequiredService<ICosmosDbService>();
+var dbService = app.GetRequiredService<ICosmosDbRepository>();
 
 //1) Add product 
 Product newItem = new(
@@ -34,7 +34,7 @@ foreach (var product in products)
     System.Console.WriteLine(product.name + ", " + product.sale);
 }
 
-async Task<CosmosPostService> InitAsync(IConfiguration config)
+async Task<CosmosPostRepository> InitAsync(IConfiguration config)
 {
     var dbName = config["CosmosDb:DatabaseName"] ?? throw new ArgumentNullException();
     var container = config["CosmosDb:ContainerName"] ?? throw new ArgumentNullException();
@@ -44,7 +44,7 @@ async Task<CosmosPostService> InitAsync(IConfiguration config)
     var client = new CosmosClient(account, key);
     var database = await client.CreateDatabaseIfNotExistsAsync(dbName);
     await database.Database.CreateContainerIfNotExistsAsync(container, "/categoryId");
-    var cosmosDbService = new CosmosPostService(client, dbName, container);
+    var cosmosDbService = new CosmosPostRepository(client, dbName, container);
 
     return cosmosDbService;
 }
